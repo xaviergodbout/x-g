@@ -2,143 +2,171 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test ascii art</title>
+    <title>Optimized Webcam to ASCII Art</title>
+    <style>
+        body { text-align: center; }
+        #ascii { white-space: pre; font-family: monospace; font-size: 10px; }
+        #video { display: none; } /* Hide the actual video feed */
+        .color-button {
+            font-family: monospace;
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid #000;
+            border-radius: 5px;
+        }
+        .color-button:hover { transform: scale(1.1); }
+        .light-mode { background-color: white; color: black; }
+        .dark-mode { background-color: black; color: white; }
+        .l33t-mode { background-color: black; color: lime; }
+    </style>
 </head>
-<script>
-    // WEBCAM FEED
-let intervalId = null; // Variable to hold the interval ID
-
-// Function to start webcam feed
-function startWebcam() {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(function(stream) {
-      const video = document.getElementById('video');
-      video.srcObject = stream;
-      video.addEventListener('loadedmetadata', function() {
-        const widthSlider = document.getElementById('widthSlider');
-        widthSlider.addEventListener('input', function() {
-          if (intervalId) clearInterval(intervalId); // Clear previous interval if exists
-          const targetWidth = parseInt(widthSlider.value); // Get the slider value
-          generateAscii(video, targetWidth); // Generate ASCII art with the updated targetWidth
-        });
-        // Initial generation of ASCII art
-        const targetWidth = parseInt(widthSlider.value); // Get the initial slider value
-        generateAscii(video, targetWidth);
-      });
-    })
-    .catch(function(error) {
-      console.error('La webcam marche pas!', error);
-    });
-}
-
-// Function to reattach event listener to the button
-function reattachButtonListener() {
-  document.getElementById('startWebcam').addEventListener('click', startWebcam);
-}
-
-// Event listener to reattach button listener when the page loads
-document.addEventListener('DOMContentLoaded', reattachButtonListener);
-
-// Function to generate ASCII art
-function generateAscii(video, targetWidth) {
-  if (intervalId) clearInterval(intervalId); // Clear previous interval if exists
-  const asciiContainer = document.getElementById('ascii-container');
-  intervalId = setInterval(function() {
-    const ascii = scanningVideo(video, targetWidth); // Pass the targetWidth
-    asciiContainer.innerText = ascii;
-  }, 100); // Reduced interval for higher framerate
-}
-
-// Event listener for the button
-document.getElementById('startWebcam').addEventListener('click', startWebcam);
-
-// VIDEO SCANNER
-function scanningVideo(video, targetWidth) { // Modify the function to accept targetWidth
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  const aspectRatio = video.videoWidth / video.videoHeight;
-  const targetHeight = Math.floor(targetWidth / aspectRatio * 0.5); // Adjust height to reduce stretching
-  canvas.width = targetWidth;
-  canvas.height = targetHeight;
-  ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
-  const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
-  return convertPixelsToAscii(imageData.data, targetWidth); // Convert pixels to ASCII characters
-}
-
-// ASCII GENERATOR
-function convertPixelsToAscii(pixels, width) {
-  let asciiChars = ' .:-=+*#%@';
-  let ascii = '';
-  // Loop all the pixels
-  for (let i = 0; i < pixels.length; i += 4) {
-    const avgBrightness = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3; // Average pixel brightness
-    const asciiIndex = Math.floor((avgBrightness / 255) * (asciiChars.length - 1)); // Map brightness to ASCII character
-    ascii += asciiChars[asciiIndex]; // Add ASCII character to the string
-    if ((i + 4) % (width * 4) === 0) ascii += '\n'; // New line if end of row is reached
-  }
-  return ascii;
-}
-
-// COLOR THEME
-function changeColor(mode) {
-  document.body.className = mode;
-  document.getElementById('ascii-container').className = mode;
-}
-</script>
-<style>
-    body {
-text-align: center;
-}
-
-#ascii-container {
-  white-space: pre;
-  font-family: monospace;
-}
-
-video {
-  position: fixed;
-  right: 10px;
-  width: 12vw;
-}
-
-.color-button {
-  font-family: monospace;
-  display: inline-block;
-  padding: 10px 20px;
-  margin: 5px;
-  cursor: pointer;
-  border: 1px solid #000;
-  border-radius: 5px;
-}
-
-.color-button:hover {
- transform: scale(1.1);
-}
-
-.light-mode {
-  background-color: white;
-  color: black;
-}
-
-.dark-mode {
-  background-color: black;
-  color: white;
-}
-
-.l33t-mode {
-  background-color: black;
-  color: green;
-}
-</style>
 <body>
-    <button id="startWebcam">Start Webcam</button>
-<input type="range" id="widthSlider" min="50" max="300" step="10" value="100">
-<div class="color-button" onclick="changeColor('light-mode')">LIGHT</div>
-<div class="color-button" onclick="changeColor('dark-mode')">DARK</div>
-<div class="color-button" onclick="changeColor('l33t-mode')">L33T</div>
+  <button id="toggleWebcam">Start Webcam</button>
+    <input type="range" id="widthSlider" min="80" max="1000" step="10" value="160">
+    <div class="color-button" onclick="changeColor('light-mode')">LIGHT</div>
+    <div class="color-button" onclick="changeColor('dark-mode')">DARK</div>
+    <div class="color-button" onclick="changeColor('l33t-mode')">L33T</div>
+    <video id="video" width="320" height="240" autoplay></video>
+    <pre id="ascii"></pre>
 
-<video id="video" width="320" height="240" autoplay></video>
-<div id="ascii-container"></div>
+    <script>
+const video = document.getElementById('video');
+const ascii = document.getElementById('ascii');
+const widthSlider = document.getElementById('widthSlider');
+const toggleWebcamButton = document.getElementById('toggleWebcam');
+let webcamActive = false; // This will track the webcam state
+let asciiChars = ' .-+=*#%@';
+let currentWidth = parseInt(widthSlider.value);
+
+function drawFrame(ctx, width, height) {
+    ctx.drawImage(video, 0, 0, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
+    let asciiImage = '';
+    // Increase vertical skipping by using a slightly larger integer to reduce vertical stretch
+    for (let i = 0; i < height; i += 5) { // Adjusted from 4 to 5 to skip more lines vertically
+        for (let j = 0; j < width; j += 2) { // Keep horizontal skipping the same
+            const offset = (i * width + j) * 4;
+            const red = imageData.data[offset];
+            const green = imageData.data[offset + 1];
+            const blue = imageData.data[offset + 2];
+            const brightness = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
+            const character = asciiChars[(asciiChars.length - 1) - Math.round(brightness * (asciiChars.length - 1))];
+            asciiImage += character;
+        }
+        asciiImage += '\n';
+    }
+    ascii.textContent = asciiImage;
+}
+
+function startConversion() {
+    const offscreenCanvas = document.createElement('canvas');
+    const ctx = offscreenCanvas.getContext('2d');
+    const scale = currentWidth / video.videoWidth;
+    const height = video.videoHeight * scale;
+    offscreenCanvas.width = currentWidth;
+    offscreenCanvas.height = height;
+
+    const draw = () => {
+        if (!video.paused && !video.ended) {
+            drawFrame(ctx, currentWidth, height);
+            requestAnimationFrame(draw);
+        }
+    };
+    draw();
+}
+
+function stopWebcam(videoElem) {
+  let stream = videoElem.srcObject;
+  let tracks = stream.getTracks();
+
+  tracks.forEach(function(track) {
+    track.stop();
+  });
+
+  videoElem.srcObject = null;
+  // Set the ASCII art container's content to the desired ASCII art
+  ascii.textContent = `
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+░  ░░░░  ░░        ░░       ░░░░      ░░░░      ░░░  ░░░░  ░░░░░░░░░      ░░░        ░░        ░
+▒  ▒  ▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒   ▒▒   ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒
+▓        ▓▓      ▓▓▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓        ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓      ▓▓▓▓      ▓▓▓
+█   ██   ██  ████████  ████  ██  ████  ██        ██  █  █  ████████  ████  ██  ████████  ███████
+█  ████  ██        ██       ████      ███  ████  ██  ████  █████████      ███  ████████  ███████
+`;
+}
+
+toggleWebcamButton.addEventListener('click', () => {
+  if (!webcamActive) {
+    // If the webcam is not active, start it
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+        video.addEventListener('loadedmetadata', () => {
+          startConversion(); // Start conversion once user has granted access and metadata is loaded
+        });
+        toggleWebcamButton.textContent = 'Turn Off Webcam'; // Change the button text
+        webcamActive = true; // Set the webcam state to active
+      })
+      .catch(error => {
+        console.error('Error accessing the camera', error);
+        ascii.textContent = 'Cannot access the camera, permission denied or camera not available.';
+      });
+  } else {
+    // If the webcam is active, stop it
+    stopWebcam(video);
+    toggleWebcamButton.textContent = 'Start Webcam'; // Change the button text back
+    webcamActive = false; // Set the webcam state to inactive
+  }
+});
+
+widthSlider.addEventListener('input', () => {
+    currentWidth = parseInt(widthSlider.value);
+    if (webcamActive) {
+        startConversion(); // Restart conversion with new width only if the webcam is active
+    }
+});
+
+// Function to change color mode and invert asciiChars if needed
+function changeColor(mode) {
+    document.body.className = mode;
+    ascii.className = mode;
+
+    // Invert asciiChars based on the mode
+    if (mode === 'light-mode') {
+        asciiChars = ' .-+=*#%@';
+    } else {
+        asciiChars = '@%#*+=-:. ';
+    }
+
+    // Restart the conversion if the webcam is active to apply the new asciiChars array
+    if (webcamActive) {
+        startConversion();
+    }
+}
+
+// Set the default mode when the script loads
+document.addEventListener('DOMContentLoaded', () => {
+    changeColor('light-mode'); // Replace 'light-mode' with the actual default mode class name if different
+});
+    </script>
 </body>
 </html>
