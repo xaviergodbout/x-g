@@ -1,2 +1,2 @@
-# x-g
-Personal page
+# x-g.ca
+Personal link repository
