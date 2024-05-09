@@ -7,139 +7,141 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { 
-          text-align: center;
-          font-family: 'Azeret Mono', monospace;
+      body { 
+        text-align: center;
+        font-family: 'Azeret Mono', monospace;
         font-size: 16px;
         display: flex;
         flex-flow: column;
         align-items: center;
-       }
-       header{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-       }
-        #ascii { white-space: pre; font-family: monospace; font-size: 10px; }
-        #video { display: none; } /* Hide the actual video feed */
-        .color-button, button {
-          background-color: #2C2C2C;
-            font-size: 12px;
-            display: inline-block;
-            padding: 20px 30px;
-            margin: 5px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all .3s ease-in-out;
-            border-radius: 10px;
-        }
-        .light-mode .color-button { /* When light-mode is active */
-          background-color: #BABABA;
-        }
-        #toggleWebcam {
-          background-color: #234516; /* Default color when webcam is not active */
+        transition: background-color 0.3s ease, color 0.3s ease; /* Transition for color and background */
+     }
+     header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+     }
+      #ascii { white-space: pre; font-family: monospace; font-size: 10px; border-radius: 10px; }
+      #video { display: none; }
+      .color-button, button {
+        background-color: #2C2C2C;
+          font-size: 12px;
+          display: inline-block;
+          padding: 20px 30px;
+          margin: 5px;
+          cursor: pointer;
           border: 1px solid transparent;
-          color: white; /* Text color for better visibility */
-          transition: all 0.3s;
-        }
-        #toggleWebcam:hover {
+          transition: all 0.3s ease-in-out; /* Ensures smooth transition for background and borders */
+          border-radius: 10px;
+      }
+      .light-mode .color-button { 
+        background-color: #BABABA;
+      }
+      #toggleWebcam {
+        background-color: #234516;
+        border: 1px solid transparent;
+        color: white;
+        transition: all 0.3s;
+      }
+      #toggleWebcam:hover {
+        border: 1px solid #52A435;
+      }
+      #toggleWebcam.recording {
+          background-color: #881919;
+          border: 1px solid transparent;
+      }
+  
+      #toggleWebcam.not-recording {
+          background-color: #234516;
+          border: 1px solid transparent;
+      }
+  
+      #toggleWebcam.recording:hover {
+          border: 1px solid #C75454;
+      }
+  
+      #toggleWebcam.not-recording:hover {
           border: 1px solid #52A435;
-        }
-        #toggleWebcam.recording {
-            background-color: #881919; /* Red when recording */
-            border: 1px solid transparent;
-        }
-
-        #toggleWebcam.not-recording {
-            background-color: #234516; /* Green when not recording */
-            border: 1px solid transparent;
-        }
-
-        #toggleWebcam.recording:hover {
-            border: 1px solid #C75454; /* Darker red on hover when recording */
-        }
-
-        #toggleWebcam.not-recording:hover {
-            border: 1px solid #52A435; /* Darker green on hover when not recording */
-        }
-      .color-button:hover, button:hover { border: 1px solid #444444; }
-      .light-mode { background-color: white; color: #1E1E1E; }
-      .dark-mode { background-color: #1E1E1E; color: white; }
-      .l33t-mode { background-color: #1E1E1E; color: lime; }
-
-      .sliderWrapper {
-        display: flex;
-        align-items: center;
-        width: 25%;
       }
-
-      #widthSlider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        border-radius: 5px;
-        background: #2C2C2C;
-        outline: none;
-        margin: 0px 10px;
-      }
-/* 
-      #widthSlider::before {
-        content: "-";
-        color: #fff;
-      }
-
-      #widthSlider::after {
-        content: "+";
-        color: #fff;
-      } */
-
-
-      #widthSlider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 25px;
-        height: 25px;
-        background: #444444;
-        border: 3px solid #1E1E1E;
-        cursor: pointer;
-      }
-
-      #widthSlider::-moz-range-thumb {
-        width: 25px;
-        height: 25px;
-        background: #444444;
-        cursor: pointer;
-      }
-      footer {
-        border-top: #2C2C2C 1px solid;
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        margin-left: auto; 
-        margin-right: auto; 
-        z-index: -1;
-        margin-top: 80px;
+    .color-button:hover, button:hover { border: 1px solid #444444; }
+    .light-mode { background-color: white; color: #1E1E1E; }
+    .dark-mode { background-color: #1E1E1E; color: white; }
+    .l33t-mode { background-color: #1E1E1E; color: lime; }
+  
+    .sliderWrapper {
+      display: flex;
+      align-items: center;
+      width: 25%;
     }
-
-    .logo_footer {
-        color: #2C2C2C;
-    }
-
-    footer p {
-        color: #2C2C2C;
-        padding-bottom: 60px;
-    }
-    .wrapper{
+  
+    #widthSlider {
+      -webkit-appearance: none;
       width: 100%;
-      max-width: 1200px;
+      height: 8px;
+      border-radius: 5px;
+      background: #2C2C2C;
+      outline: none;
+      margin: 0px 10px;
     }
-    </style>
+  
+    #widthSlider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      background: #444444;
+      border: 3px solid #1E1E1E;
+      cursor: pointer;
+    }
+  
+    #widthSlider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      background: #444444;
+      cursor: pointer;
+    }
+    footer {
+      border-top: #2C2C2C 1px solid;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-left: auto; 
+      margin-right: auto; 
+      z-index: -1;
+      margin-top: 80px;
+  }
+  
+  .logo_footer {
+      color: #2C2C2C;
+  }
+  
+  footer p {
+      color: #2C2C2C;
+      padding-bottom: 60px;
+  }
+  .wrapper{
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  /* Logo color adjustments for light-mode */
+  .logo {
+    color: #fff; /* default color, visible in dark and l33t mode */
+    transition: color 0.3s ease; /* Smooth transition for logo color change */
+  }
+  
+  .light-mode .logo {
+    color: #000; /* black color for light mode */
+  }
+  </style>
+  
+  
 </head>
 <body>
   
     <div class="wrapper">
       <header>
-        <a class="logo" href="x-g.ca" style="color: #fff;font-size:16px; text-decoration: none;">/xavier<br>godbout</a>
+        <a class="logo" href="x-g.ca" style="font-size:16px; text-decoration: none;">/xavier<br>godbout</a>
         <button id="toggleWebcam">Start Webcam</button>
         <div class="sliderWrapper">
           <span>-</span>
@@ -159,7 +161,7 @@
 
     <div class="wrapper">
       <footer>
-        <a href="x-g.ca" class="logo logo_footer">/xavier<br>godbout</a>
+        <a href="x-g.ca" class="logo_footer">/xavier<br>godbout</a>
         <p>© Copyright 2024, Godbout Corporation</p>
       </footer>
     </div>
