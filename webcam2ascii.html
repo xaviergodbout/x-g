@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Optimized Webcam to ASCII Art</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,9 +69,12 @@
     .dark-mode { background-color: #1E1E1E; color: white; }
     .l33t-mode { background-color: #1E1E1E; color: lime; }
   
-    .sliderWrapper {
+    .sliderWrapper, .recWrapper, .row {
       display: flex;
       align-items: center;
+    }
+
+    .sliderWrapper {
       width: 25%;
     }
   
@@ -128,11 +132,49 @@
   .logo {
     color: #fff; /* default color, visible in dark and l33t mode */
     transition: color 0.3s ease; /* Smooth transition for logo color change */
+    margin-right: 30px;
   }
   
   .light-mode .logo {
     color: #000; /* black color for light mode */
   }
+
+  @keyframes blink {
+   0% { opacity: 0 }
+   50% { opacity: 1 }
+   100% { opacity: 0 }
+   }
+   .rec_light {
+    display: none; /* Hide by default */
+    animation: blink 1.5s infinite;
+    animation-fill-mode: both;
+    width: 12px;
+    height: 12px;
+    background-color: #AA2429;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 750px) {
+  header {
+    flex-flow: column;
+  }
+  .row {
+    width: 100%;
+    justify-content: space-between;
+    margin: 10px 0px;
+  }
+  .rec_light {
+    margin-left: 20%;
+  }
+  button{
+    font-size: 11px;
+  }
+  .color-button {
+    font-size: 11px;
+    padding: 20px 25px;
+  }
+}
   </style>
   
   
@@ -141,14 +183,25 @@
   
     <div class="wrapper">
       <header>
-        <a class="logo" href="x-g.ca" style="font-size:16px; text-decoration: none;">/xavier<br>godbout</a>
-        <button id="toggleWebcam">Start Webcam</button>
-        <div class="sliderWrapper">
-          <span>-</span>
-          <input type="range" id="widthSlider" min="80" max="1000" step="10" value="160">
-          <span>+</span>
-        </div>
-        <div class="btnWrapper">
+
+
+            
+            <div class="row">
+              <a class="logo" href="x-g.ca" style="font-size:16px; text-decoration: none;">/xavier<br>godbout</a>
+              <div class="rec_light"></div>
+              <button id="toggleWebcam">Start Webcam</button>
+            </div>
+
+
+
+          <div class="row sliderWrapper">
+            <span>-</span>
+            <input type="range" id="widthSlider" min="80" max="1000" step="10" value="160">
+            <span>+</span>
+          </div>
+
+
+        <div class="row btnWrapper">
           <div class="color-button" onclick="changeColor('light-mode')">light-mode</div>
           <div class="color-button" onclick="changeColor('dark-mode')">dark-mode</div>
           <div class="color-button" onclick="changeColor('l33t-mode')">l33t-mode</div>
@@ -279,6 +332,7 @@ function stopWebcam(videoElem) {
 }
 
 toggleWebcamButton.addEventListener('click', () => {
+    const recLight = document.querySelector('.rec_light'); // Access the rec_light element
     if (!webcamActive) {
         navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
@@ -289,6 +343,7 @@ toggleWebcamButton.addEventListener('click', () => {
             toggleWebcamButton.textContent = 'Turn Off Webcam';
             toggleWebcamButton.classList.remove('not-recording');
             toggleWebcamButton.classList.add('recording');
+            recLight.style.display = 'block'; // Show rec_light when webcam is on
             webcamActive = true;
         })
         .catch(error => {
@@ -300,6 +355,7 @@ toggleWebcamButton.addEventListener('click', () => {
         toggleWebcamButton.textContent = 'Start Webcam';
         toggleWebcamButton.classList.remove('recording');
         toggleWebcamButton.classList.add('not-recording');
+        recLight.style.display = 'none'; // Hide rec_light when webcam is off
         webcamActive = false;
     }
 });
