@@ -3,50 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <title>Optimized Webcam to ASCII Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { text-align: center; }
+        body { 
+          text-align: center;
+          font-family: 'Azeret Mono', monospace;
+        font-size: 16px;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+       }
+       header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+       }
         #ascii { white-space: pre; font-family: monospace; font-size: 10px; }
         #video { display: none; } /* Hide the actual video feed */
-        .color-button {
-            font-family: monospace;
+        .color-button, button {
+          background-color: #2C2C2C;
+            font-size: 12px;
             display: inline-block;
-            padding: 10px 20px;
+            padding: 20px 30px;
             margin: 5px;
             cursor: pointer;
-            border: 1px solid #000;
-            border-radius: 5px;
+            border: 1px solid transparent;
+            transition: all .3s ease-in-out;
+            border-radius: 10px;
         }
-        .color-button:hover { transform: scale(1.1); }
-        .light-mode { background-color: white; color: black; }
-        .dark-mode { background-color: black; color: white; }
-        .l33t-mode { background-color: black; color: lime; }
+        .light-mode .color-button { /* When light-mode is active */
+          background-color: #BABABA;
+        }
+        #toggleWebcam {
+          background-color: #234516; /* Default color when webcam is not active */
+          border: 1px solid transparent;
+          color: white; /* Text color for better visibility */
+          transition: all 0.3s;
+        }
+        #toggleWebcam:hover {
+          border: 1px solid #52A435;
+        }
+        #toggleWebcam.recording {
+            background-color: #881919; /* Red when recording */
+            border: 1px solid transparent;
+        }
+
+        #toggleWebcam.not-recording {
+            background-color: #234516; /* Green when not recording */
+            border: 1px solid transparent;
+        }
+
+        #toggleWebcam.recording:hover {
+            border: 1px solid #C75454; /* Darker red on hover when recording */
+        }
+
+        #toggleWebcam.not-recording:hover {
+            border: 1px solid #52A435; /* Darker green on hover when not recording */
+        }
+      .color-button:hover, button:hover { border: 1px solid #444444; }
+      .light-mode { background-color: white; color: #1E1E1E; }
+      .dark-mode { background-color: #1E1E1E; color: white; }
+      .l33t-mode { background-color: #1E1E1E; color: lime; }
+
+      .sliderWrapper {
+        display: flex;
+        align-items: center;
+        width: 25%;
+      }
+
+      #widthSlider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: #2C2C2C;
+        outline: none;
+        margin: 0px 10px;
+      }
+/* 
+      #widthSlider::before {
+        content: "-";
+        color: #fff;
+      }
+
+      #widthSlider::after {
+        content: "+";
+        color: #fff;
+      } */
+
+
+      #widthSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        background: #444444;
+        border: 3px solid #1E1E1E;
+        cursor: pointer;
+      }
+
+      #widthSlider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        background: #444444;
+        cursor: pointer;
+      }
+      footer {
+        border-top: #2C2C2C 1px solid;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-left: auto; 
+        margin-right: auto; 
+        z-index: -1;
+        margin-top: 80px;
+    }
+
+    .logo_footer {
+        color: #2C2C2C;
+    }
+
+    footer p {
+        color: #2C2C2C;
+        padding-bottom: 60px;
+    }
+    .wrapper{
+      width: 100%;
+      max-width: 1200px;
+    }
     </style>
 </head>
 <body>
-  <button id="toggleWebcam">Start Webcam</button>
-    <input type="range" id="widthSlider" min="80" max="1000" step="10" value="160">
-    <div class="color-button" onclick="changeColor('light-mode')">LIGHT</div>
-    <div class="color-button" onclick="changeColor('dark-mode')">DARK</div>
-    <div class="color-button" onclick="changeColor('l33t-mode')">L33T</div>
-    <video id="video" width="320" height="240" autoplay></video>
-    <pre id="ascii"></pre>
+  
+    <div class="wrapper">
+      <header>
+        <a class="logo" href="x-g.ca" style="color: #fff;font-size:16px; text-decoration: none;">/xavier<br>godbout</a>
+        <button id="toggleWebcam">Start Webcam</button>
+        <div class="sliderWrapper">
+          <span>-</span>
+          <input type="range" id="widthSlider" min="80" max="1000" step="10" value="160">
+          <span>+</span>
+        </div>
+        <div class="btnWrapper">
+          <div class="color-button" onclick="changeColor('light-mode')">light-mode</div>
+          <div class="color-button" onclick="changeColor('dark-mode')">dark-mode</div>
+          <div class="color-button" onclick="changeColor('l33t-mode')">l33t-mode</div>
+        </div>
+      </header>
+    </div>
+
+      <video id="video" width="320" height="240" autoplay></video>
+      <pre id="ascii"></pre>
+
+    <div class="wrapper">
+      <footer>
+        <a href="x-g.ca" class="logo logo_footer">/xavier<br>godbout</a>
+        <p>© Copyright 2024, Godbout Corporation</p>
+      </footer>
+    </div>
+
 
     <script>
 const video = document.getElementById('video');
 const ascii = document.getElementById('ascii');
 const widthSlider = document.getElementById('widthSlider');
 const toggleWebcamButton = document.getElementById('toggleWebcam');
+const asciiArt = `
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+██████████████████████████████████████████████████████████████████
+██████████████████████████████████████████████████████████████████
+                                                                  
+░  ░░░░  ░░        ░░       ░░░░░░░░░░      ░░░░      ░░░  ░░░░  ░
+▒  ▒  ▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒   ▒▒   ▒
+▓        ▓▓      ▓▓▓▓       ▓▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓        ▓
+█   ██   ██  ████████  ████  ████████  ████  ██        ██  █  █  █
+█  ████  ██        ██       ██████████      ███  ████  ██  ████  █
+                                                                  
+░░░░░░░░░░░░░░░░░░░░      ░░░        ░░        ░░░░░░░░░░░░░░░░░░░
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓      ▓▓▓▓      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+███████████████████  ████  ██  ████████  █████████████████████████
+████████████████████      ███  ████████  █████████████████████████
+                                                                  
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+██████████████████████████████████████████████████████████████████
+██████████████████████████████████████████████████████████████████
+                                                                  
+
+
+
+
+
+
+
+
+
+
+
+
+
+`;
 let webcamActive = false; // This will track the webcam state
-let asciiChars = ' .-+=*#%@';
+let asciiChars = '@%#*+=-:. '; // Default asciiChars for dark-mode
 let currentWidth = parseInt(widthSlider.value);
 
 function drawFrame(ctx, width, height) {
     ctx.drawImage(video, 0, 0, width, height);
     const imageData = ctx.getImageData(0, 0, width, height);
     let asciiImage = '';
-    // Increase vertical skipping by using a slightly larger integer to reduce vertical stretch
-    for (let i = 0; i < height; i += 5) { // Adjusted from 4 to 5 to skip more lines vertically
-        for (let j = 0; j < width; j += 2) { // Keep horizontal skipping the same
+    for (let i = 0; i < height; i += 5) {
+        for (let j = 0; j < width; j += 2) {
             const offset = (i * width + j) * 4;
             const red = imageData.data[offset];
             const green = imageData.data[offset + 1];
@@ -78,94 +265,69 @@ function startConversion() {
 }
 
 function stopWebcam(videoElem) {
-  let stream = videoElem.srcObject;
-  let tracks = stream.getTracks();
+    let stream = videoElem.srcObject;
+    let tracks = stream.getTracks();
 
-  tracks.forEach(function(track) {
-    track.stop();
-  });
+    tracks.forEach(function(track) {
+        track.stop();
+    });
 
-  videoElem.srcObject = null;
-  // Set the ASCII art container's content to the desired ASCII art
-  ascii.textContent = `
-  
-  
-  
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-  
-  
-░  ░░░░  ░░        ░░       ░░░░      ░░░░      ░░░  ░░░░  ░░░░░░░░░      ░░░        ░░        ░
-▒  ▒  ▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒   ▒▒   ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒
-▓        ▓▓      ▓▓▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓        ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓      ▓▓▓▓      ▓▓▓
-█   ██   ██  ████████  ████  ██  ████  ██        ██  █  █  ████████  ████  ██  ████████  ███████
-█  ████  ██        ██       ████      ███  ████  ██  ████  █████████      ███  ████████  ███████
-`;
+    videoElem.srcObject = null;
+    ascii.textContent = asciiArt; // Set the ASCII art when the webcam is turned off
 }
 
 toggleWebcamButton.addEventListener('click', () => {
-  if (!webcamActive) {
-    // If the webcam is not active, start it
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-        video.addEventListener('loadedmetadata', () => {
-          startConversion(); // Start conversion once user has granted access and metadata is loaded
+    if (!webcamActive) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+            video.addEventListener('loadedmetadata', () => {
+                startConversion();
+            });
+            toggleWebcamButton.textContent = 'Turn Off Webcam';
+            toggleWebcamButton.classList.remove('not-recording');
+            toggleWebcamButton.classList.add('recording');
+            webcamActive = true;
+        })
+        .catch(error => {
+            console.error('Error accessing the camera', error);
+            ascii.textContent = 'Cannot access the camera, permission denied or camera not available.';
         });
-        toggleWebcamButton.textContent = 'Turn Off Webcam'; // Change the button text
-        webcamActive = true; // Set the webcam state to active
-      })
-      .catch(error => {
-        console.error('Error accessing the camera', error);
-        ascii.textContent = 'Cannot access the camera, permission denied or camera not available.';
-      });
-  } else {
-    // If the webcam is active, stop it
-    stopWebcam(video);
-    toggleWebcamButton.textContent = 'Start Webcam'; // Change the button text back
-    webcamActive = false; // Set the webcam state to inactive
-  }
+    } else {
+        stopWebcam(video);
+        toggleWebcamButton.textContent = 'Start Webcam';
+        toggleWebcamButton.classList.remove('recording');
+        toggleWebcamButton.classList.add('not-recording');
+        webcamActive = false;
+    }
 });
+
 
 widthSlider.addEventListener('input', () => {
     currentWidth = parseInt(widthSlider.value);
     if (webcamActive) {
-        startConversion(); // Restart conversion with new width only if the webcam is active
+        startConversion();
     }
 });
 
-// Function to change color mode and invert asciiChars if needed
 function changeColor(mode) {
     document.body.className = mode;
     ascii.className = mode;
 
-    // Invert asciiChars based on the mode
     if (mode === 'light-mode') {
         asciiChars = ' .-+=*#%@';
     } else {
         asciiChars = '@%#*+=-:. ';
     }
 
-    // Restart the conversion if the webcam is active to apply the new asciiChars array
     if (webcamActive) {
         startConversion();
     }
 }
 
-// Set the default mode when the script loads
 document.addEventListener('DOMContentLoaded', () => {
-    changeColor('light-mode'); // Replace 'light-mode' with the actual default mode class name if different
+    changeColor('dark-mode'); // Existing call to set the initial color mode
+    ascii.textContent = asciiArt; // Display ASCII art by default
 });
     </script>
 </body>
