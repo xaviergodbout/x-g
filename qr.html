@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur Code QR</title>
+    <link rel="icon" type="image/x-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAOUSURBVHgBxZfrUSpBEIVnb/FfjMAlAiECIQLMQI1AjUAzUCNQIxAiYI1AjACMQIxgbn8jh+p9WcAt656qqd2dR5/unjO9u1loQIxxaJexNa5d13bBat2W1ubWplmWFT+uMOLc2iz+HhZwtJH3rX3G3wccffFmitwub09PT92iKFoz1O/3w9XVVTg/Pw/39/eh263vyu3tbVgul602hsMh69magW3JUg4s7JJj+OPjI5ycnNQWvr6+putsNgu2MFxeXtYcgBwCxtts5HkeHh8feSxs3qgTvwWXaxILiXI+n28Wssg7AR4eHlK/xjyabJA9QIBKBtyd8K32Elg4Go02z2uPa7i5uUnb0YTJZBIuLi42z2SuAeM/OBd2hHmeGuSmm9Dr9cKeSBnIwx6A/PT0NO250rsHujhQkzIGfdohIVJPTh9btVqtGreBcW+jSStwZxxMb3jbU7BYLJLqub+7u0vHcsdTkNDxExjEAa92j+Pj4839+/t7mntwcJAEpzVkj7FtbIBSBrYFEVYdJyP74E9TJ9UQEjX2n/T6ownh2dlZzTE1fwTb+kFpCygepNODZ+2nCg/k6IVUcxLQQFsgzFN20MnX11fZab8FLKDCUcsptd4Iakf1OEAfYnt+fi6JigjJ1NHRUbLB/Ol0mjJFPzZorG3MAAMYVwkVsV5QiA5CiIicfqLzR5Rs8Y5gDHKAozq6NZTek5+f0cprNANRQ0YQLYLU//LyUuofj8dprjmV+ml2TKNtSerXGI1+7NM8Sg6IiMkisoiipTj1iwRYmtO9RZac8Q4A1ljEJTJsML/VgW0hMjlQhYgUyE/zSxpApdVT4DEYDJLi/ZsNsaEH1rHH2KiC+dfX16kI8Qb12KsUC5AiMESr0ixQEWleoOrHYYFCtPITIMcRnXkaz94pjOpIoXgZxAHUT32gn7X0uY+QtMZh1Vk7UHojklZfsaofJIwdHh4mAkUKIIeAbLnEpvUUOeZV3pwbB3aGosagHPSlmhqgOoAzTdogVragCHsCYrZGX0QQ8YzQ1ieslIkGzHFgWu0lVYhNzYsG0Ee5pWyTbhxRlSNSsqJyreY/UB0m+ixH2sNdTgFEEhRXnNFHKhpq+r+QM2ssraT3VAdQ3JsNdiHyqhUQHFELiApApFrPOp0OnR7BOxy+dTcqEcT/9GtWdYKf00X8Pcxi5ec0a3EEEaA8PGXBv/ye04qA4LKs9qH4Fz2ByS5h5tfYAAAAAElFTkSuQmCC">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://themunim.com/wp-content/themes/munim/assets/js/Calculator/qrcode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.9.0/html-to-image.js"></script>
+
+
+    <style>
+        html {
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        }
+        *, *:before, *:after {
+        box-sizing: inherit;
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+        margin: 0;
+        padding: 0;
+        font-weight: normal;
+        color: #fff;
+        }
+
+        body { 
+        font-family: 'Azeret Mono', monospace;
+        font-size: 16px;
+        background-color: #1E1E1E;
+        color: #fff;
+        position: relative;
+        height: calc(100dvh - 80px);
+        width: 100%;
+        max-width: 1200px;
+        margin: 80px 0 0 0;
+        padding: 0px 40px;
+        }
+        .flex-end {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .inputWrapper{
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            color: #fff;
+            text-decoration: none;
+        }
+        h1 {
+            font-weight: 400;
+            font-size: 32px;
+            margin-bottom: 80px;
+        }
+        article{
+            display: none;
+            transition: all .3s ease-in-out;
+        }
+        article.on{
+            display: flex;
+        }
+
+        article label {
+            margin-bottom: 10px;
+        }
+
+        article input, article textarea {
+            padding: 20px 35px;
+            background-color: #2C2C2C;
+            border: 2px solid #444444;
+            color: #fff;
+            border-radius: 15px;
+            font-family: 'Azeret Mono', monospace;
+            font-size: 16px;
+            height: 19px;
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 300px;
+            box-sizing: unset;
+        }
+
+        article input, article label {
+            display:block;
+            text-align: left;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .downloadWrapper, #qrcode {
+            display: flex;
+            justify-content: center;
+        }
+
+        canvas {
+            margin: 20px 0 40px 0;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 15px;
+        }
+
+        .button {
+        background-color: #2C2C2C;
+        color: #fff;
+        text-decoration: none;
+          display: inline-block;
+          padding: 20px 30px;
+          margin: 5px;
+          cursor: pointer;
+          border: 1px solid transparent;
+          transition: all 0.3s ease-in-out; /* Ensures smooth transition for background and borders */
+          border-radius: 10px;
+      }
+      .button:hover { border: 1px solid #444444; }
+
+      svg{
+        margin-right: 10px;
+      }
+
+      footer {
+        position: absolute;
+        bottom: 40px;
+        width: 100%;
+        max-width: 1200px;
+      border-top: #2C2C2C 1px solid;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-left: auto; 
+      margin-right: auto; 
+      z-index: -1;
+  }
+  
+  .logo_footer {
+      color: #2C2C2C;
+  }
+  
+  footer p {
+      color: #2C2C2C;
+      padding-bottom: 60px;
+  }
+  .menu {
+    display: flex;
+  }
+  .radioButton {
+        background-color: #2C2C2C;
+        color: #fff;
+        text-decoration: none;
+          
+          padding: 20px 30px;
+          margin: 5px;
+          cursor: pointer;
+          border: 1px solid transparent;
+          transition: all 0.3s ease-in-out; /* Ensures smooth transition for background and borders */
+          border-radius: 10px;
+          position: relative;
+          -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  flex-direction: row-reverse;
+    }
+    .radioButton:hover { border: 1px solid #444444; }
+
+    /* Hide the browser's default radio button */
+    .radioButton input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+
+    height: 0;
+    }
+
+    /* Create a custom radio button */
+    .checkmark {
+        display: block;
+    height: 16px;
+    width: 16px;
+    border: 2px solid #444444;
+    border-radius: 50%;
+    transition: all .3s ease-in-out;
+    margin-right: 10px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .radioButton:hover input ~ .checkmark {
+        border: 1px solid #fff;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .radioButton input:checked ~ .checkmark {
+    background-color: #fff;
+    }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a class="logo" href="">/xavier<br>godbout</a>
+    </header>
+    <div class="flex-end">
+        <h1>Générateur de Code QR</h1>
+        
+        <div class="menu">
+            <label for="tab1" class="radioButton">URL
+                <input type="radio" id="tab1" name="tab" value="url" checked>
+                <span class="checkmark"></span>
+            </label>
+            <label for="tab2" class="radioButton">Téléphone
+                <input type="radio" id="tab2" value="phone" name="tab">
+                <span class="checkmark"></span>
+            </label>
+            <label for="tab3" class="radioButton">SMS
+                <input type="radio" id="tab3" value="sms" name="tab">
+                <span class="checkmark"></span>
+            </label>
+            <label for="tab4" class="radioButton">Texte
+                <input type="radio" id="tab4" value="text" name="tab">
+                <span class="checkmark"></span>
+            </label>
+            <label for="tab5" class="radioButton">Email
+                <input type="radio" id="tab5" value="email" name="tab">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="inputWrapper">
+        <article>
+          <input type="text" name="url" id="url" placeholder="https://www.x-g.ca" pattern="(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9]{1,63}\.[a-z0-9]{2,63}\b([-a-zA-Z0-9@:%_\+.~#?&amp;/=]*)">
+        </article>
+        
+        <article>
+          <input name="phone" id="phone" type="tel" placeholder="+1">
+        </article>
+        
+        <article>
+          <div class="labelWrapper">
+              <label>Votre # de téléphone</label>
+              <input name="phone" id="sms_phone"
+                     type="tel" placeholder="+1" aria-required="false" aria-label="+1" value=""
+                     aria-invalid="true">
+          </div>
+          <div class="labelWrapper">
+              <label>Votre message</label>
+              <textarea id="sms_text" placeholder="Ajoutez-le ici..."></textarea>
+          </div>
+        </article>
+        
+        <article>
+          <textarea id="plain_text" placeholder="Ajoutez-le ici..." maxlength="1000"></textarea>
+        </article>
+        
+        <article>
+          <div class="labelWrapper">
+              <label>Email</label>
+              <input name="email" id="email" type="email" placeholder="example@example.com">
+          </div>
+          <div class="labelWrapper">
+              <label>Sujet</label>
+              <input name="message" id="subject" type="text" placeholder="Sujet du courriel">
+          </div>
+          <div class="labelWrapper">
+              <label>Votre message</label>
+              <textarea id="message" placeholder="Ajoutez-le ici..."></textarea>
+          </div>
+        </article>
+    </div>
+    
+    <div id="qrcode"></div>
+    <div id="previewImg"></div>
+    
+    
+    <div class="downloadWrapper">
+        <a class="button qr-png-download" href="javascript:;" title="Download PNG"><svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 12.5263H12V14H0V12.5263ZM6.66667 8.232L10.714 3.75789L11.6567 4.79979L6 11.0526L0.343333 4.80053L1.286 3.75789L5.33333 8.23053V0H6.66667V8.232Z" fill="white"/>
+            </svg>PNG</a>
+        <a class="button qr-svg-download" href="javascript:;" title="Download SVG"><svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 12.5263H12V14H0V12.5263ZM6.66667 8.232L10.714 3.75789L11.6567 4.79979L6 11.0526L0.343333 4.80053L1.286 3.75789L5.33333 8.23053V0H6.66667V8.232Z" fill="white"/>
+            </svg>SVG</a>
+    </div>
+
+        <footer>
+            <a href="x-g.ca" class="logo_footer">/xavier<br>godbout</a>
+            <p>© Copyright 2024, Godbout Corporation</p>
+          </footer>
+
+
+<script>
+     $('[name=tab]').each(function(i,d){
+        var p = $(this).prop('checked');
+        if(p){
+            $('article').eq(i)
+                .addClass('on');
+        }
+    });
+
+    $('[name=tab]').on('change', function(){
+        var p = $(this).prop('checked');
+
+        // $(type).index(this) == nth-of-type
+        var i = $('[name=tab]').index(this);
+
+        $('article').removeClass('on');
+        $('article').eq(i).addClass('on');
+    });
+
+function qr_generate() {
+  $('#qrcode').empty();
+  let select_val = $('input[type=radio]:checked').val();
+  if(select_val == 'url') {
+    let url = $('#url').val();
+    if(url == '' || url == null) {
+      blank_qr();
+    } else {
+      $('#qrcode').qrcode({width: 250,height: 250,text: url});
+    }
+  } else if(select_val == 'phone'){
+    let phone = $('#phone').val();
+    if(phone == '' || phone == null) {
+      blank_qr();
+    } else {
+      $('#qrcode').qrcode({width: 250,height: 250,text: 'tel:'+phone});
+    }
+  } else if(select_val == 'sms'){
+    let phone = $('#sms_phone').val();
+    let text = $('#sms_text').val();
+    if(phone == '' || phone == null) {
+      blank_qr();
+    } else {
+      $('#qrcode').qrcode({width: 250,height: 250,text:'smsto:'+phone+':'+text});
+    }
+  } else if(select_val == 'text') {
+    let plain_text = $('#plain_text').val();
+    if(plain_text == '' || plain_text == null) {
+      blank_qr();
+    } else {
+      $('#qrcode').qrcode({width: 250,height: 250,text: plain_text});
+    }
+  } else if(select_val == 'email'){
+    let email = $('#email').val();
+    let subject = $('#subject').val();
+    let message = $('#message').val();
+    if(email == '' || email == null) {
+      blank_qr();
+    } else {
+      $('#qrcode').qrcode({width: 250,height: 250,text:'mailto:'+email+'?subject='+subject+'&body='+message});
+    }
+  }
+}
+
+function blank_qr() {
+  $('#qrcode').empty();
+  $('#qrcode').qrcode({width: 250,height: 250,text: 'https://x-g.ca',rander:'svg'});
+}
+$('input').on('change keyup', function(){
+  qr_generate();
+})
+$('textarea').on('change keyup', function(){
+  qr_generate();
+})
+$(document).ready(function(){
+  qr_generate();
+})
+
+function download(canvas, filename) {
+    var lnk = document.createElement('a'), e;
+
+    // Replace special characters in filename to make it a valid filename
+    filename = filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+
+    lnk.download = filename + '.png';  // Add extension
+
+    lnk.href = canvas.toDataURL("image/png;base64");
+
+    if (document.createEvent) {
+        e = document.createEvent("MouseEvents");
+        e.initMouseEvent("click", true, true, window,
+            0, 0, 0, 0, 0, false, false, false,
+            false, 0, null);
+
+        lnk.dispatchEvent(e);
+    } else if (lnk.fireEvent) {
+        lnk.fireEvent("onclick");
+    }
+}
+
+$('.qr-png-download').on('click', function () {
+    $('canvas').attr('id', 'canvas');
+    var canvas = document.getElementById('canvas');
+    var filename = $('#url').val() || 'qrcode'; // Default filename if URL is empty
+    download(canvas, filename);
+})
+
+$('.qr-svg-download').on('click', function () {
+    htmlToImage.toSvg(document.getElementById('qrcode'))
+    .then(function (dataUrl) {
+      let svg = decodeURIComponent(dataUrl.split(',')[1]);
+      const base64doc = btoa(unescape(encodeURIComponent(svg)));
+      const a = document.createElement('a');
+      const e = new MouseEvent('click');
+      let filename = $('#url').val() || 'qrcode'; // Default filename if URL is empty
+      filename = filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      a.download = filename + '.svg'; // Add extension
+      a.href = 'data:image/svg+xml;base64,' + base64doc;
+      a.dispatchEvent(e);
+    });
+})
+</script>
+
+</body>
+</html>
