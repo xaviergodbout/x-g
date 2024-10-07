@@ -23,6 +23,14 @@
       justify-content: space-between;
       align-items: center;
      }
+     .logo svg {
+            fill: #2C2C2C;
+            transition: all .3s ease-in-out;
+        }
+
+        .logo:hover svg {
+            fill: #fff;
+        }
       #ascii { white-space: pre; font-family: monospace; font-size: 10px; border-radius: 10px; }
       #video { display: none; }
       .color-button, button {
@@ -116,14 +124,16 @@
       margin-top: 80px;
   }
   
-  .logo_footer {
-      color: #2C2C2C;
-  }
-  
+ 
   footer p {
       color: #2C2C2C;
       padding-bottom: 60px;
   }
+  .logo_footer svg {
+        fill: #2C2C2C;
+        width: 40px;
+        margin-top: 8px;
+    }
   .wrapper{
     width: 100%;
     max-width: 1200px;
@@ -189,8 +199,9 @@
 
             
             <div class="row">
-              <a class="logo" href="https://x-g.ca/" style="font-size:16px; text-decoration: none;">/xavier<br>godbout</a>
-              <div class="rec_light"></div>
+              <a class="logo" href="https://x-g.ca"><svg width="117" height="43" viewBox="0 0 117 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M31.5588 0H39.3621L27.8032 37.8796H20L31.5588 0ZM108.823 7.41211V11.5891C106.319 8.14923 101.938 6.59308 96.8047 6.59308C89.5857 6.59308 82.3667 10.033 82.3667 19.2879C82.3667 28.5428 89.5857 31.9827 96.8047 31.9827C101.938 31.9827 106.319 30.4266 108.823 26.9867V28.8295C108.823 34.235 105.776 36.0369 99.5171 36.0369C94.76 36.0369 90.1282 35.2588 85.1626 34.2759L84.2444 40.3367C88.7095 41.3605 94.5098 42.3842 101.228 42.3842C111.493 42.3842 116.793 38.4939 116.834 28.9933V7.41211H108.823ZM108.823 19.2879C108.823 23.1373 106.027 25.3486 99.8093 25.3486C93.5918 25.3486 90.7959 23.1373 90.7959 19.2879C90.7959 15.4794 93.5918 13.2271 99.8093 13.2271C106.027 13.2271 108.823 15.4794 108.823 19.2879ZM44.4685 31.737H55.3596L63.2881 23.9153L71.2166 31.737H82.1077L68.5876 19.5745L82.1077 7.41211H71.2166L63.2881 15.2338L55.3596 7.41211H44.4685L57.9885 19.5745L44.4685 31.737ZM7.29492 26.3707L2.8208 22.3233L11.0527 22.3234V20.99H2.82227L7.29492 16.9427L6.2522 16L0 21.6567L6.25293 27.3134L7.29492 26.3707Z"/>
+                </svg></a>              <div class="rec_light"></div>
               <button id="toggleWebcam">Start Webcam</button>
             </div>
 
@@ -216,13 +227,18 @@
 
     <div class="wrapper">
       <footer>
-        <a href="x-g.ca" class="logo_footer">/xavier<br>godbout</a>
-        <p>© Copyright 2024, Godbout Corporation</p>
-      </footer>
-    </div>
+        <a href="" class="logo_footer"><svg viewBox="0 0 97 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M88.8226 11.5891V7.4121H96.8345V28.9933C96.7928 38.4939 91.4932 42.3842 81.228 42.3842C74.5097 42.3842 68.7094 41.3605 64.2445 40.3367L65.1625 34.2759C70.1282 35.2588 74.7601 36.0368 79.5171 36.0368C85.7764 36.0368 88.8226 34.235 88.8226 28.8295V26.9867C86.3189 30.4266 81.9374 31.9827 76.8048 31.9827C69.5857 31.9827 62.3667 28.5428 62.3667 19.2879C62.3667 10.033 69.5857 6.59308 76.8048 6.59308C81.9374 6.59308 86.3189 8.14922 88.8226 11.5891ZM79.8092 25.3486C86.0268 25.3486 88.8226 23.1373 88.8226 19.2879C88.8226 15.4794 86.0268 13.2271 79.8092 13.2271C73.5917 13.2271 70.7959 15.4794 70.7959 19.2879C70.7959 23.1373 73.5917 25.3486 79.8092 25.3486Z"/>
+            <path d="M35.3597 31.737H24.4685L37.9886 19.5746L24.4685 7.41211H35.3597L43.2881 15.2337L51.2165 7.41211H62.1077L48.5876 19.5746L62.1077 31.737H51.2165L43.2881 23.9154L35.3597 31.737Z"/>
+            <path d="M11.5588 0H19.362L7.80324 37.8797H0L11.5588 0Z"/>
+            </svg>
+        </a>
+        <p>© Copyright <span id="currentYear"></span>, Xavier Godbout</p>
+    </footer>
+  </div>
 
-
-    <script>
+  <script>
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
 const video = document.getElementById('video');
 const ascii = document.getElementById('ascii');
 const widthSlider = document.getElementById('widthSlider');
