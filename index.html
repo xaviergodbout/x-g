@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Personal Hyperlink Directory">
-    <title>x-g.ca - Hyperlink Directory</title>
-    <link id="favicon" rel="icon" href="img/x-g_favicon_light.ico" />
-
+    <title>x-g.ca | Link Index</title>
+    <link rel="icon" href="x-g_favicon_light.svg" type="image/svg+xml" id="favicon">
+    <meta name="description" content="Personal Link Index">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -287,27 +286,27 @@
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
-  <script>
-    function updateFavicon() {
-      const favicon = document.getElementById('favicon');
-      if (!favicon) return;
+    <script>
+        function updateFavicon() {
+        const favicon = document.getElementById('favicon');
+        if (!favicon) return;
 
-      const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
-      const isDark = darkThemeMq.matches;
+        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+        const isDark = darkThemeMq.matches;
 
-      // Add cache buster to force reload favicon
-      favicon.href = (isDark ? 'img/x-g_favicon_dark.ico' : 'img/x-g_favicon_light.ico') + '?v=' + new Date().getTime();
-      console.log('Favicon set to', favicon.href);
-    }
+        // Add cache buster to force reload favicon
+        favicon.href = (isDark ? 'x-g_favicon_dark.svg' : 'x-g_favicon_light.svg') + '?v=' + new Date().getTime();
+        console.log('Favicon set to', favicon.href);
+        }
 
-    updateFavicon();
+        updateFavicon();
 
-    const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
-    if (darkThemeMq.addEventListener) {
-      darkThemeMq.addEventListener('change', updateFavicon);
-    } else if (darkThemeMq.addListener) {
-      darkThemeMq.addListener(updateFavicon);
-    }
-  </script>
+        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+        if (darkThemeMq.addEventListener) {
+        darkThemeMq.addEventListener('change', updateFavicon);
+        } else if (darkThemeMq.addListener) {
+        darkThemeMq.addListener(updateFavicon);
+        }
+    </script>
 </body>
 </html>
