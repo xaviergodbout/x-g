@@ -14,15 +14,86 @@
 <style>
     html {
         box-sizing: border-box;
-        font-size: 16px;
-        background-image: url(img/link_ascii.webp);
-        background-size: 40%;
-        background-position: top right;
-        background-repeat: no-repeat;
-        background-color: #1E1E1E;
+        font-size: 16px;      
         display: flex;
         justify-content: center;
+        position: relative;
     }
+
+    .link_ascii {
+        width: 40%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        pointer-events: none;
+    }
+
+
+    html.dark-theme {
+        background-color: #1E1E1E;
+    }
+
+    html.light-theme {
+        background-color: #E8E7E1;
+
+        body, h1, h2, h3, h4, h5, h6, p, ol, ul, li span {
+            color: #000;
+        }
+
+        a:not(.secLink, .logo, .logo_footer)::after, span::after {
+        background: #000;
+        }
+
+        li {
+            background-color: #dbdad2;
+        }
+
+        li:hover {
+            border: #b9b9b4 1px solid;
+        }
+    }
+
+    .logo {
+        cursor: pointer;
+        transition: filter 0.3s ease;
+        filter: none;
+        position: relative;
+        background: none;
+        border: none;
+    }
+
+    .logo:hover .toolbox {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(5px);
+        transition-delay: 1s;
+    }
+
+    .toolbox {
+        position: absolute;
+        bottom: -40px;
+        right: 0;
+        left: 0;
+        background: #333;
+        color: white;
+        padding: 5px;
+        border-radius: 6px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        font-family: 'Azeret Mono', monospace;
+        font-size: 10px;
+        transform: translateY(-5px);
+    }
+
+    html.dark-theme .logo {
+    filter: none; /* normal for dark theme */
+    }
+
+    html.light-theme .link_ascii, html.light-theme .logo {
+    filter: invert(1) brightness(2);
+    }
+
 
     *, *:before, *:after {
     box-sizing: inherit;
@@ -86,10 +157,6 @@
 
     p {
         font-size: 12px;
-    }
-
-    .logo svg {
-        fill: #fff;
     }
 
     section.links {
@@ -201,8 +268,8 @@
     }
 
     @media only screen and (max-width: 850px) {
-        html {
-            background-size: 60%;
+        .link_ascii {
+            width: 60%;
         }
 
         section.links {
@@ -218,9 +285,14 @@
 </style>
 
 <body>
-    <a class="logo" href="">        
-        <img src="img/x-g_logo_spin.gif" alt="" width="100">
-    </a>
+    <button class="logo" id="toggle-theme">
+        <img src="img/x-g_logo_spin.gif" alt="x-g logo" width="100" >
+        <div class="toolbox">
+            Toggle Theme
+        </div>
+    </button>
+    
+    <img src="img/link_ascii.webp" alt="link chain art" class="link_ascii">
 
     <section class="links">
         <h2>/links</h2>
@@ -268,7 +340,7 @@
     </section>
 
     <footer>
-        <a href="" class="logo_footer"><svg width="84" height="25" viewBox="0 0 84 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <a href="/" class="logo_footer"><svg width="84" height="25" viewBox="0 0 84 25" fill="none" xmlns="http://www.w3.org/2000/svg" alt="x-g logo">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M7.29492 17.3707L2.8208 13.3233L11.0527 13.3234V11.99H2.82227L7.29492 7.9427L6.2522 7L0 12.6567L6.25293 18.3134L7.29492 17.3707Z" fill="#2C2C2C"/>
             <path d="M54.2869 23.1065C48.3109 22.3215 42.9192 20.7964 38.7493 18.876L38.6677 19.0352C38.0416 20.2437 36.7402 21.0549 35.4293 21.0549L34.236 21.0512C38.5026 22.3177 43.3138 23.3444 48.4418 24.017C51.7959 24.4573 55.059 24.7159 58.1627 24.8077C58.1438 24.6971 58.1286 24.5829 58.1229 24.4648C58.1039 24.1332 58.1457 23.8091 58.2348 23.5037C56.9429 23.4138 55.6244 23.2826 54.2869 23.1065Z" fill="#2C2C2C"/>
             <path d="M30.083 9.729C30.8267 4.19261 42.8697 1.20427 56.9826 3.05348C60.8319 3.55934 64.4365 4.3706 67.6294 5.39919L70.5662 5.40855C65.2617 3.39634 58.7204 1.76821 51.5587 0.829557C32.8016 -1.63044 16.8979 1.56587 16.0365 7.96972C15.5623 11.4902 19.736 15.2467 26.708 18.3249L27.0798 17.8547C28.1783 16.4645 29.8307 15.2279 31.8834 14.2612C30.5364 12.7792 29.88 11.2372 30.083 9.729Z" fill="#2C2C2C"/>
@@ -307,6 +379,42 @@
         } else if (darkThemeMq.addListener) {
         darkThemeMq.addListener(updateFavicon);
         }
+    </script>
+    <script>
+        const html = document.documentElement;
+    
+        // Function to apply theme based on system preference
+        function applySystemTheme() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // User prefers dark mode
+            html.classList.add('dark-theme');
+            html.classList.remove('light-theme');
+        } else {
+            // User prefers light mode or no preference
+            html.classList.add('light-theme');
+            html.classList.remove('dark-theme');
+        }
+        }
+    
+        // Apply the system theme on initial load
+        applySystemTheme();
+    
+        // Optional: Listen for changes to the preference and update dynamically
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        applySystemTheme();
+        });
+    
+        // Your existing toggle button code
+        const btn = document.getElementById('toggle-theme');
+        btn.onclick = () => {
+        if (html.classList.contains('dark-theme')) {
+            html.classList.remove('dark-theme');
+            html.classList.add('light-theme');
+        } else {
+            html.classList.remove('light-theme');
+            html.classList.add('dark-theme');
+        }
+        };
     </script>
 </body>
 </html>
