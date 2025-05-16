@@ -62,11 +62,23 @@
         border: none;
     }
 
-    .logo:hover .toolbox {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(5px);
-        transition-delay: 1s;
+
+
+    /* Show tooltip only if hover is supported */
+    @media (hover: hover) and (pointer: fine) {
+        .logo:hover .toolbox {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(5px);
+            transition-delay: 1s;
+        }
+    }
+
+    /* Otherwise (touch devices), tooltip is never shown */
+    @media (hover: none) {
+        .logo:hover .toolbox {
+            display: none !important;
+        }
     }
 
     .toolbox {
