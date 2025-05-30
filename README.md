@@ -1,4 +1,7 @@
 # x-g.ca
-Personal link repository
+Personal Link Index
 
-www.x-g.ca 
+[x-g.ca](https://x-g.ca)
+
+
+![x-g_logo_grey](https://github.com/user-attachments/assets/747c69e5-1165-48f2-b535-44608a8b7de1)
